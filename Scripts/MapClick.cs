@@ -19,6 +19,7 @@ public class MapClick : MonoBehaviour
 	starSysteminfo info;
 	public TMP_Text systemName,systemcoords,resources,civtype,population,fuel;
 	Vector3 spacePos;
+	public GameObject ship;
 
 	
     // Start is called before the first frame update
@@ -35,6 +36,7 @@ public class MapClick : MonoBehaviour
     	
 		if (Input. GetMouseButtonDown(0))
 		{
+			
 			if(EventSystem.current.IsPointerOverGameObject()) return;
 			
 			Ray ray = Camera.main.ScreenPointToRay(Input. mousePosition);
@@ -42,8 +44,9 @@ public class MapClick : MonoBehaviour
 
 			if(Physics.Raycast(ray, out hit))
 			{
-				if(!hit.collider.gameObject.name.Contains("EmptySpace"))
+				if(hit.collider.gameObject.tag =="StarSystem")
 				{
+					
 					coords.text = hit.collider.gameObject.transform.position.x +"-"+hit.collider.gameObject.transform.position.z;
 					planetName.text=hit.collider.gameObject.name;
 					info = hit.collider.gameObject.GetComponent<starSysteminfo>();
@@ -73,12 +76,22 @@ public class MapClick : MonoBehaviour
 					Debug.Log("SELECTED " +hit.collider.gameObject.name+ " AT "+hit.collider.gameObject.transform.position.x +"-"+hit.collider.gameObject.transform.position.z);
 			
 				}
-				if(hit.collider.gameObject.name.Contains("EmptySpace"))
+				if(hit.collider.gameObject.tag =="EmptySpace")
 				{
+					var ray_mouseclick = Camera.main.ScreenPointToRay(Input.mousePosition);
+					RaycastHit hit_mouseclick = new RaycastHit();
+					if (Physics.Raycast (ray_mouseclick, out hit_mouseclick))
+					{
+						Debug.Log(hit_mouseclick.collider.gameObject.name + " ");
+					}
+					GameObject _ship = Instantiate(ship);
+					//_ship.transform.position = new Vector3(hit.point.x,1f,hit.point.z);
+					//print("ship created");
+					//return;
 					planetName.text = "Empty Space";
 					coords.text = Mathf.Round(hit.point.x).ToString() +":"+Mathf.Round(hit.point.z).ToString();
 					spacePos.Set(hit.point.x,0f,hit.point.z);
-					emptySector.transform.position = spacePos;
+					//
 					playerManager.instance.currentlySelectedSystem = emptySector;
 					systemName.text = "Empty Space";
 					resources.text = "";
