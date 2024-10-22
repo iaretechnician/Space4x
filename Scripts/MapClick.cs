@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
 using TMPro;
 
 public class MapClick : MonoBehaviour
@@ -20,6 +19,15 @@ public class MapClick : MonoBehaviour
 	public TMP_Text systemName,systemcoords,resources,civtype,population,fuel;
 	Vector3 spacePos;
 	public GameObject ship;
+	Vector3 startMeasure= new Vector3(0f,0f,0f);
+	Vector3 endMeasure = new Vector3(0f,0f,0f);
+	Vector3 currentVector3 = new Vector3(0f, 0f, 0f);
+	Vector3 mouseVector3 = new Vector3(0f, 0f, 0f);
+	Vector3 v3;
+	private bool _measuring = false;
+	private bool _startMeasuring = false;
+	private string distanceText;
+	private string displayCoords;
 
 	
     // Start is called before the first frame update
@@ -39,21 +47,18 @@ public class MapClick : MonoBehaviour
 			
 			if(EventSystem.current.IsPointerOverGameObject()) return;
 			
-			Ray ray = Camera.main.ScreenPointToRay(Input. mousePosition);
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 
 			if(Physics.Raycast(ray, out hit))
 			{
 				if(hit.collider.gameObject.tag =="StarSystem")
 				{
-					
 					coords.text = hit.collider.gameObject.transform.position.x +"-"+hit.collider.gameObject.transform.position.z;
 					planetName.text=hit.collider.gameObject.name;
 					info = hit.collider.gameObject.GetComponent<starSysteminfo>();
 					starSystem.SetActive(true);
-
 					int counter = 0;
-
 					foreach(Transform child in starSystem.transform)
 					{
 						if (counter >= info.planetcount)
@@ -101,6 +106,40 @@ public class MapClick : MonoBehaviour
 
 				}
 			}
+		}
+		
+	
+	if (Input.GetMouseButtonDown(1)) 
+	{
+		v3 = Input.mousePosition;
+		v3.y = 0f;
+		v3 = Camera.main.ScreenToWorldPoint(v3);
+		print("V3 "+v3);
+		
+			_startMeasuring = !_startMeasuring;
+			print ("measuring "+_startMeasuring);
+		}
+		//Right clicked, start measruing but not currently measuring.
+		//set measuring to true and startmeasture to false
+		if(_startMeasuring && !_measuring)
+		{
+			_measuring = true;
+			//the first time we right click, it enters this switch and measure is zero.
+			startMeasure.Set(v3.x, 0f, v3.z);
+			distanceText = "";
+			//Cursor.SetCursor();
+		}
+		//Now second click, startmeasure is false and we had already
+		//set measuring to true
+		if(!_startMeasuring && _measuring)
+		{
+			_measuring = false;
+			endMeasure.Set(v3.x, 0f, v3.z);
+
+			print("Startmeasure "+startMeasure);
+			print("endMeasure "+endMeasure );
+			distanceText = "<color=yellow>\nDistance: " + System.Math.Round(Vector3.Distance(startMeasure, endMeasure), 2) + " parsecs</color>";
+			print(distanceText);            
 		}
 	}
 }
