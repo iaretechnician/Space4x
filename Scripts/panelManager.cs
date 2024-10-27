@@ -19,25 +19,19 @@ void Start()
 
     }
     
-	public void switchPanelView(int _index)
+	public void switchPanelView()
 	{
-		foreach(GameObject go in displayPanels)
+		;
+		foreach(GameObject go in GameObject.FindGameObjectsWithTag("UI Panel"))
 		{
 			go.SetActive(false);
 			
 		}
-		//ButtonRow.SetActive(true);
-		displayPanels[_index].SetActive(true);
 	}
 	public void enableMapView()
 	{
-		foreach(GameObject go in displayPanels)
-		{
-			go.SetActive(false);
-			
-		}
+	
 		//ButtonRow.SetActive(true);
-		displayPanels[1].SetActive(true);
 		loginCamera.SetActive(false);
 		mapCamera.SetActive(true);
 		

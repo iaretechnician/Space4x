@@ -24,23 +24,45 @@ public class MapClick : MonoBehaviour
 	Vector3 currentVector3 = new Vector3(0f, 0f, 0f);
 	Vector3 mouseVector3 = new Vector3(0f, 0f, 0f);
 	Vector3 v3;
-	private bool _measuring = false;
+	public enum measure_enum{waiting,started,completed};
+	public measure_enum _measuring;
 	private bool _startMeasuring = false;
-	private string distanceText;
-	private string displayCoords;
+	private bool _endMeasuring = false;
+
+	public TMP_Text distanceText;
+	public TMP_Text displayCoords;
+	private LineRenderer distLine;
 
 	
     // Start is called before the first frame update
     void Start()
-    {
+	{
+		_measuring = measure_enum.completed;
 	    starSystem = GameObject.Find("_Star");
 	    emptySector = GameObject.Find("EmptySector");
+	    distLine = gameObject.GetComponent<LineRenderer>();
 	    
     }
 
     // Update is called once per frame
     void Update()
 	{
+		v3 = Input.mousePosition;
+		v3 = Camera.main.ScreenToWorldPoint(v3);
+		v3.y = 1f;
+		v3.x=Mathf.Floor(v3.x*10)/10;
+		v3.z=Mathf.Floor(v3.z*10)/10;
+
+		displayCoords.text=v3.x +" - "+v3.z;
+		
+		
+		if(_measuring == measure_enum.started)
+		{
+			distLine.SetPosition(1, v3);
+			//print("DISTLINE END"+distLine.GetPosition(1));
+			distanceText.text = System.Math.Round(Vector3.Distance(startMeasure, v3), 2) + " parsecs</color>";
+
+		}
     	
 		if (Input. GetMouseButtonDown(0))
 		{
@@ -108,38 +130,48 @@ public class MapClick : MonoBehaviour
 			}
 		}
 		
+		
+	
 	
 	if (Input.GetMouseButtonDown(1)) 
 	{
-		v3 = Input.mousePosition;
-		v3.y = 0f;
-		v3 = Camera.main.ScreenToWorldPoint(v3);
-		print("V3 "+v3);
-		
-			_startMeasuring = !_startMeasuring;
-			print ("measuring "+_startMeasuring);
-		}
-		//Right clicked, start measruing but not currently measuring.
-		//set measuring to true and startmeasture to false
-		if(_startMeasuring && !_measuring)
-		{
-			_measuring = true;
-			//the first time we right click, it enters this switch and measure is zero.
-			startMeasure.Set(v3.x, 0f, v3.z);
-			distanceText = "";
-			//Cursor.SetCursor();
-		}
-		//Now second click, startmeasure is false and we had already
-		//set measuring to true
-		if(!_startMeasuring && _measuring)
-		{
-			_measuring = false;
-			endMeasure.Set(v3.x, 0f, v3.z);
 
+		
+		switch (_measuring)
+		{
+			//clicked the second time to complete
+		case measure_enum.started:
+			_measuring = measure_enum.completed;
+			endMeasure.Set(v3.x, 1f, v3.z);
 			print("Startmeasure "+startMeasure);
 			print("endMeasure "+endMeasure );
-			distanceText = "<color=yellow>\nDistance: " + System.Math.Round(Vector3.Distance(startMeasure, endMeasure), 2) + " parsecs</color>";
-			print(distanceText);            
+			distanceText.text = System.Math.Round(Vector3.Distance(startMeasure, endMeasure), 2) + " parsecs</color>";
+			print("MEASURING "+_measuring);
+
+			break;
+			//clicked the first time
+		case measure_enum.waiting:
+			_measuring = measure_enum.started;
+			startMeasure.Set(v3.x, 1f, v3.z);
+			distLine.SetPosition(0, startMeasure);
+			distLine.SetPosition(1, startMeasure);
+			print("DISTLINE START "+distLine.GetPosition(0));
+			distanceText.text = "";
+			print("MEASURING "+_measuring);
+			break;
+			//we are measuring, this is second click
+	
+		default:
+			_measuring = measure_enum.completed;
+			break;
 		}
 	}
+	
+	}//update
+	public void Measure()
+	{
+		//Toggles right mouse button from screen move to measure
+		_measuring = measure_enum.waiting;
+	}
+		
 }

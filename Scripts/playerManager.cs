@@ -40,7 +40,7 @@ public class playerManager : NetworkBehaviour
 		{
 			loginCamera.SetActive(true);
 			canvas.SetActive(true);
-			panelmgr.switchPanelView(0);
+		
 			TMPusername.text = PlayerPrefs.GetString("username","");
 			TMPpassword.text = PlayerPrefs.GetString("password","");
 		}
