@@ -38,7 +38,8 @@ public class playerManager : NetworkBehaviour
 		//display the login panel
 		if(isLocalPlayer)
 		{
-			loginCamera.SetActive(true);
+			mapCamera = GameObject.FindGameObjectWithTag("MainCamera");
+			//loginCamera.SetActive(true);
 			canvas.SetActive(true);
 		
 			TMPusername.text = PlayerPrefs.GetString("username","");
