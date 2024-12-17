@@ -15,7 +15,7 @@ public class Planet : MonoBehaviour
 	public int amount_fuel;
     // Start is called before the first frame update
     void Start()
-    {
+	{
         
     }
 
