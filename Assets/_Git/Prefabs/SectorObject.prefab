@@ -190,12 +190,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4258767448070554558}
-  - component: {fileID: 1092924583368821489}
   - component: {fileID: 4756474965844858874}
   - component: {fileID: -7767148524338635883}
   - component: {fileID: 7501648363895263329}
+  - component: {fileID: 8854150893753178004}
   m_Layer: 0
-  m_Name: Star
+  m_Name: SectorObject
   m_TagString: StarSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -218,27 +218,6 @@ Transform:
   - {fileID: 2580506893334913458}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!135 &1092924583368821489
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7466243433818263577}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4756474965844858874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,7 +233,7 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: 75dc575df1dbe7e4796abb89097cce40
+  m_AssetId: eaf98750970f18c439f150521e50497d
   hasSpawned: 0
 --- !u!114 &-7767148524338635883
 MonoBehaviour:
@@ -270,10 +249,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  yellowStar: {fileID: 0}
-  StarPort: {fileID: 0}
-  starBase: {fileID: 0}
-  blackHole: {fileID: 0}
+  yellowStar: {fileID: 21300000, guid: 13c67c80879922649950609f47c07925, type: 3}
+  StarPort: {fileID: 21300000, guid: 73d242a71b3713c408f7f921bdc5dbc6, type: 3}
+  starBase: {fileID: 21300000, guid: 55f6a8cb1cec7bf4481b66008a3f6c7f, type: 3}
+  blackHole: {fileID: 21300000, guid: c6b4dfc6357f099439582f3a1946e3c0, type: 3}
   ID: 0
   name: 
   planetcount: 0
@@ -341,3 +320,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!65 &8854150893753178004
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7466243433818263577}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

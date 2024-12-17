@@ -1458,14 +1458,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  testline: {fileID: 896927798}
   chance: 25
   starmap: {fileID: 896927796}
-  starPrefab: {fileID: 7466243433818263577, guid: 75dc575df1dbe7e4796abb89097cce40, type: 3}
-  emptySpacePrefab: {fileID: 6251483919920467509, guid: a7893863d88bcad40ad3a6f80451b0bb, type: 3}
+  starPrefab: {fileID: 7466243433818263577, guid: eaf98750970f18c439f150521e50497d, type: 3}
+  sectorPrefab: {fileID: 7466243433818263577, guid: eaf98750970f18c439f150521e50497d, type: 3}
   starPortPrefab: {fileID: 6821426987921560441, guid: ee358f831394dce468bae1aadd7432eb, type: 3}
   blackholePrefab: {fileID: 5348719532220252557, guid: 958e15739b3b13a4786c5ae995ea5cf2, type: 3}
   starRedPrefab: {fileID: 6875499387532365677, guid: 56dd8b4ba12dbfe498c83f4c84390d1a, type: 3}
+  yellowStar_sprite: {fileID: 21300000, guid: 13c67c80879922649950609f47c07925, type: 3}
+  starPort_sprite: {fileID: 21300000, guid: f4a5c51897f64024fa79b885f7a38367, type: 3}
+  blackHole_sprite: {fileID: 21300000, guid: c6b4dfc6357f099439582f3a1946e3c0, type: 3}
   starSystem_prefab: {fileID: 765387999066826613, guid: 514874b630a582c4ca826f12f18f1067, type: 3}
   fileStarSystemNames: {fileID: 4900000, guid: 27bb85ee7ee9be94c8bbb920b1db79b6, type: 3}
 --- !u!114 &1654334029

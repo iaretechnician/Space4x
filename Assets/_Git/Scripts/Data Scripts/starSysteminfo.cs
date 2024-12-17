@@ -11,7 +11,7 @@ public class starSysteminfo : NetworkBehaviour
 	//like starbase, is only synced when it is detected by the players.
 	
 	//The possible images shown on the map
-	public Sprite yellowStar,starBase,blackHole;
+	public Sprite yellowStar,StarPort,starBase,blackHole;
 	[SyncVar]
 	public int ID;
 	[SyncVar]
@@ -23,12 +23,14 @@ public class starSysteminfo : NetworkBehaviour
 	[SyncVar]
 	public int y_coord;
 	[SyncVar]
-	public int npcStarbase;
+	public bool hasStarport;
+	public StarPort starPort;
+	public List<Planet> planets = new List<Planet>();
 	public int playerStarbase;//0 is no, > than zero is the index in starbasearray
 	public int resource_3;
 	public int resource_2;
-	public int res_fuel;
 	public int resource_1;
+	public int res_fuel;
 	public int civType;//affects how much tax and resources we can get from them
 	public int population;
 	

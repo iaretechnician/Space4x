@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using Vectrosity;
 
 public class MapClick : MonoBehaviour
 {
@@ -19,19 +20,19 @@ public class MapClick : MonoBehaviour
 	public TMP_Text systemName,systemcoords,resources,civtype,population,fuel;
 	Vector3 spacePos;
 	public GameObject ship;
-	Vector3 startMeasure= new Vector3(0f,0f,0f);
-	Vector3 endMeasure = new Vector3(0f,0f,0f);
-	Vector3 currentVector3 = new Vector3(0f, 0f, 0f);
-	Vector3 mouseVector3 = new Vector3(0f, 0f, 0f);
+	Vector3 startMeasure= new Vector3(0f,1f,0f);
+	Vector3 endMeasure = new Vector3(0f,1f,0f);
+	Vector3 currentVector3 = new Vector3(0f, 1f, 0f);
+	Vector3 mouseVector3 = new Vector3(0f, 1f, 0f);
 	Vector3 v3;
-	public enum measure_enum{waiting,started,completed};
+	public enum measure_enum{measuring,started,completed};
 	public measure_enum _measuring;
 	private bool _startMeasuring = false;
 	private bool _endMeasuring = false;
+	private VectorLine lastLine;
 
 	public TMP_Text distanceText;
 	public TMP_Text displayCoords;
-	private LineRenderer distLine;
 
 	
     // Start is called before the first frame update
@@ -40,7 +41,6 @@ public class MapClick : MonoBehaviour
 		_measuring = measure_enum.completed;
 	    starSystem = GameObject.Find("_Star");
 	    emptySector = GameObject.Find("EmptySector");
-	    distLine = gameObject.GetComponent<LineRenderer>();
 	    
     }
 
@@ -56,10 +56,10 @@ public class MapClick : MonoBehaviour
 		displayCoords.text=v3.x +" - "+v3.z;
 		
 		
-		if(_measuring == measure_enum.started)
+		if(_measuring == measure_enum.measuring)
 		{
-			distLine.SetPosition(1, v3);
-			//print("DISTLINE END"+distLine.GetPosition(1));
+			if(lastLine != null) VectorLine.Destroy (ref lastLine);
+			lastLine = VectorLine.SetLine3D (Color.green, startMeasure,v3);
 			distanceText.text = System.Math.Round(Vector3.Distance(startMeasure, v3), 2) + " parsecs</color>";
 
 		}
@@ -135,32 +135,56 @@ public class MapClick : MonoBehaviour
 	
 	if (Input.GetMouseButtonDown(1)) 
 	{
-
 		
 		switch (_measuring)
-		{
-			//clicked the second time to complete
-		case measure_enum.started:
-			_measuring = measure_enum.completed;
-			endMeasure.Set(v3.x, 1f, v3.z);
-			print("Startmeasure "+startMeasure);
-			print("endMeasure "+endMeasure );
-			distanceText.text = System.Math.Round(Vector3.Distance(startMeasure, endMeasure), 2) + " parsecs</color>";
-			print("MEASURING "+_measuring);
+		{				
+		case measure_enum.completed:
+			Debug.Log("MEASURING VALUE "+_measuring);
 
-			break;
-			//clicked the first time
-		case measure_enum.waiting:
-			_measuring = measure_enum.started;
+			//_measuring = measure_enum.started;
+			_measuring = measure_enum.measuring;
+			v3 = Input.mousePosition;
+			v3 = Camera.main.ScreenToWorldPoint(v3);
+			v3.y = 1f;
+			v3.x=Mathf.Floor(v3.x*10)/10;
+			v3.z=Mathf.Floor(v3.z*10)/10;
+			
 			startMeasure.Set(v3.x, 1f, v3.z);
-			distLine.SetPosition(0, startMeasure);
-			distLine.SetPosition(1, startMeasure);
-			print("DISTLINE START "+distLine.GetPosition(0));
-			distanceText.text = "";
-			print("MEASURING "+_measuring);
+			endMeasure.Set(v3.x, 1f, v3.z);
+			Debug.Log("Starting "+startMeasure + " Endmeasure "+v3);
+
+			distanceText.text = System.Math.Round(Vector3.Distance(startMeasure, endMeasure), 2) + " parsecs</color>";
+			
 			break;
+			
+		case measure_enum.measuring:
+			Debug.Log("MEASURING VALUE "+_measuring);
+
+			_measuring = measure_enum.completed;
+			distanceText.text = "";
+			break;
+			
+		case measure_enum.started:
+			Debug.Log("MEASURING VALUE "+_measuring);
+
+			//this is the first click
+			_measuring = measure_enum.measuring;
+			v3 = Input.mousePosition;
+			v3 = Camera.main.ScreenToWorldPoint(v3);
+			v3.y = 1f;
+			v3.x=Mathf.Floor(v3.x*10)/10;
+			v3.z=Mathf.Floor(v3.z*10)/10;
+			
+			startMeasure.Set(v3.x, 1f, v3.z);
+			endMeasure.Set(v3.x, 1f, v3.z);
+			Debug.Log("Starting "+startMeasure + " Endmeasure "+v3);
+
+			distanceText.text = System.Math.Round(Vector3.Distance(startMeasure, endMeasure), 2) + " parsecs</color>";
+			break;
+		
 			//we are measuring, this is second click
 	
+		
 		default:
 			_measuring = measure_enum.completed;
 			break;
@@ -168,10 +192,6 @@ public class MapClick : MonoBehaviour
 	}
 	
 	}//update
-	public void Measure()
-	{
-		//Toggles right mouse button from screen move to measure
-		_measuring = measure_enum.waiting;
-	}
+
 		
 }

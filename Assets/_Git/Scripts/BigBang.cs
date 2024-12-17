@@ -7,18 +7,18 @@ using System.IO;
 using Vectrosity;
 
 public class BigBang : NetworkBehaviour {
-    public LineRenderer testline;
 
     public static BigBang instance;
     public int chance = 100;
     private static bool BIGBANG = false;
     public GameObject starmap;
     public GameObject starPrefab;
-    public GameObject emptySpacePrefab;
+	public GameObject sectorPrefab;
 
     public GameObject starPortPrefab;
     public GameObject blackholePrefab;
-    public GameObject starRedPrefab;
+	public GameObject starRedPrefab;
+	public Sprite yellowStar_sprite,starPort_sprite,blackHole_sprite;
     GameObject newStar, emptySector;
 
     public GameObject starSystem_prefab; //list of all planets prefebs, not sure why I need this right now.. <-----------------????---------------->
@@ -140,11 +140,17 @@ public class BigBang : NetworkBehaviour {
                         sectorGrid[x, y].playerStarbase = 0;
                         //count the Federation Starports for Log
                         starportcount++;
-                        newStar = Instantiate(starPortPrefab);
-                        NetworkServer.Spawn(newStar);
+	                    //newStar = Instantiate(starPortPrefab);
+	                    newStar = Instantiate(sectorPrefab);
+	                    NetworkServer.Spawn(newStar);
+	                    sectorPrefab.GetComponent<SpriteRenderer>().sprite = starPort_sprite;
+
                     } else {
-                        newStar = Instantiate(starPrefab);
-                        NetworkServer.Spawn(newStar);
+	                    newStar = Instantiate(sectorPrefab);
+
+	                    NetworkServer.Spawn(newStar);
+	                    sectorPrefab.GetComponent<SpriteRenderer>().sprite = yellowStar_sprite;
+
                     }
 
                     //all done!
@@ -167,8 +173,11 @@ public class BigBang : NetworkBehaviour {
                 } else {
                     //Not a star system. Can contain a black hole or other object
                     if (Random.Range(0, 50000) < 1) {
-                        newStar = Instantiate(blackholePrefab);
-                        NetworkServer.Spawn(newStar);
+	                    newStar = Instantiate(sectorPrefab);
+
+	                    NetworkServer.Spawn(newStar);
+	                    sectorPrefab.GetComponent<SpriteRenderer>().sprite = blackHole_sprite;
+
                         newStar.transform.position = new Vector3((float)x, 1f, (float)y);
                         blackholecount++;
                     } else //empty space
@@ -180,7 +189,7 @@ public class BigBang : NetworkBehaviour {
                 //end creating current sector coords
             }
         }
-	    CreateRandomLines(100);
+	    CreateRandomLines(0);
 
         print(systemCount + " Star Systems | " + allStarSystems.Count + " Planets | " + starportcount + " StarPorts |" + blackholecount + " Black Holes\n");
         //Galaxy has been created.
