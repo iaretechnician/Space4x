@@ -195,7 +195,7 @@ GameObject:
   - component: {fileID: 7501648363895263329}
   - component: {fileID: 8854150893753178004}
   m_Layer: 0
-  m_Name: SectorObject
+  m_Name: StarSystemObject
   m_TagString: StarSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -233,7 +233,7 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: eaf98750970f18c439f150521e50497d
+  m_AssetId: 931767f5d9d97984ab723ce59b18e9b3
   hasSpawned: 0
 --- !u!114 &-7767148524338635883
 MonoBehaviour:

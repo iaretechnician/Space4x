@@ -10,18 +10,17 @@ public class BigBang : NetworkBehaviour {
 
     public static BigBang instance;
     public int chance = 100;
-    private static bool BIGBANG = false;
+	private static bool BIGBANG = false;
+	//Gameobject in the scene that we parent all the sector objects to
     public GameObject starmap;
-    public GameObject starPrefab;
+	//This is the gameobject that represents the visual and data for each sector.
+	//We can change the sprite to show on the map what is in this sector
 	public GameObject sectorPrefab;
-
-    public GameObject starPortPrefab;
-    public GameObject blackholePrefab;
-	public GameObject starRedPrefab;
+	//Images we put onto the sectorPrefab to visually show what is in the sector
 	public Sprite yellowStar_sprite,starPort_sprite,blackHole_sprite;
-    GameObject newStar, emptySector;
-
-    public GameObject starSystem_prefab; //list of all planets prefebs, not sure why I need this right now.. <-----------------????---------------->
+	//This is the actual object in the scene that contains all the visual and data info
+	GameObject sectorObject;
+    
     public TextAsset fileStarSystemNames;
     private string[] StarSystemNames; //array of all StarSystemNames sorted from TextAsset file
 
@@ -43,9 +42,8 @@ public class BigBang : NetworkBehaviour {
         public int population;
     }
 
-    //create both an 2d array of all sectorList and a List of just populated sectorList
-    //the List is much smaller and used to update new clients.
-    //clients will update their local sectorGrid array with the contents of the Lists and then we can delete the List
+    
+	//This contains all the data for every sector in the game so the server can cycle through the list
     public structStarSystem[,] sectorGrid;
     //public structStarSystem _currentsector;
     public List<structStarSystem> allStarSystems;
@@ -75,12 +73,16 @@ public class BigBang : NetworkBehaviour {
     void bigBang() {
         //if we already created the galaxy dont run this again.
         //there is an error somewhere that server object is created twice so multi Bangs!
-        BIGBANG = true;
-
-        int systemCount = 0; //how many systems are created
-        int starnameIndex = 0; //used for which name is selected from list
+	    BIGBANG = true;
+        
+	    int starnameIndex = 0; //used for which name is selected from list
+	    
+	    //internel counters of objects created just for the log outpu
+	    int systemCount = 0; //how many systems are created
+	    int planetCount = 0; //total number of planets
         int starportcount = 0; //how many starports total
-        int blackholecount = 0; //how many black holes
+	    int blackholecount = 0; //how many black holes
+        
         int _xcoord = 0; //the actual coordinates on the Galaxy plane -5000 to 5000
         int _ycoord = 0; // makes outer systems more rare and place the sun sprites
 
@@ -119,7 +121,8 @@ public class BigBang : NetworkBehaviour {
 
                     sectorGrid[x, y].npcStarport = 0; //no starport by default
                     //how many planets are there
-                    sectorGrid[x, y].numPlanets = Random.Range(1, 8);
+	                sectorGrid[x, y].numPlanets = Random.Range(1, 8);
+	                planetCount += sectorGrid[x, y].numPlanets;
                     sectorGrid[x, y].ID = systemCount; //array index this planet is in the allStarSystems arry
                     /* ---------------------
                     * resources are in random ranges from 0 to 100 in kilotons. 
@@ -130,7 +133,6 @@ public class BigBang : NetworkBehaviour {
                     sectorGrid[x, y].resource_1 = (Random.Range(0, 100) * sectorGrid[x, y].numPlanets);
                     sectorGrid[x, y].civType = (Random.Range(0, 10));
                     sectorGrid[x, y].population = sectorGrid[x, y].civType * (Random.Range(0, 32000) * sectorGrid[x, y].numPlanets); //random population, adjust later                        
-                    allStarSystems.Add(sectorGrid[x, y]);
 
                     //is there an NPC starport? rnd -50 to 0, clamps to -1(none),0(Fed starport)
                     if ((Random.Range(0, 10)) < 1) {
@@ -140,63 +142,65 @@ public class BigBang : NetworkBehaviour {
                         sectorGrid[x, y].playerStarbase = 0;
                         //count the Federation Starports for Log
                         starportcount++;
-	                    //newStar = Instantiate(starPortPrefab);
-	                    newStar = Instantiate(sectorPrefab);
-	                    NetworkServer.Spawn(newStar);
+	                    sectorObject = Instantiate(sectorPrefab);
+						NetworkServer.Spawn(sectorObject);
 	                    sectorPrefab.GetComponent<SpriteRenderer>().sprite = starPort_sprite;
 
                     } else {
-	                    newStar = Instantiate(sectorPrefab);
-
-	                    NetworkServer.Spawn(newStar);
+	                    sectorObject = Instantiate(sectorPrefab);
+	                    NetworkServer.Spawn(sectorObject);
 	                    sectorPrefab.GetComponent<SpriteRenderer>().sprite = yellowStar_sprite;
 
                     }
 
                     //all done!
                     //set the info
-                    newStar.GetComponent<starSysteminfo>().ID = systemCount;
-                    newStar.GetComponent<starSysteminfo>().x_coord = x;
-                    newStar.GetComponent<starSysteminfo>().y_coord = y;
-                    newStar.GetComponent<starSysteminfo>().name = sectorGrid[x, y].systemname;
-                    newStar.GetComponent<starSysteminfo>().planetcount = sectorGrid[x, y].numPlanets;
-                    newStar.GetComponent<starSysteminfo>().resource_1 = sectorGrid[x, y].resource_1;
-                    newStar.GetComponent<starSysteminfo>().resource_2 = sectorGrid[x, y].resource_2;
-                    newStar.GetComponent<starSysteminfo>().resource_3 = sectorGrid[x, y].resource_3;
-                    newStar.GetComponent<starSysteminfo>().res_fuel = sectorGrid[x, y].res_fuel;
-                    newStar.GetComponent<starSysteminfo>().civType = Random.Range(0, 3);
-                    newStar.GetComponent<starSysteminfo>().population = newStar.GetComponent<starSysteminfo>().civType * Random.Range(10, 32000);
+                    sectorObject.GetComponent<starSysteminfo>().ID = systemCount;
+                    sectorObject.GetComponent<starSysteminfo>().x_coord = x;
+                    sectorObject.GetComponent<starSysteminfo>().y_coord = y;
+                    sectorObject.GetComponent<starSysteminfo>().name = sectorGrid[x, y].systemname;
+                    sectorObject.GetComponent<starSysteminfo>().planetcount = sectorGrid[x, y].numPlanets;
+                    sectorObject.GetComponent<starSysteminfo>().resource_1 = sectorGrid[x, y].resource_1;
+                    sectorObject.GetComponent<starSysteminfo>().resource_2 = sectorGrid[x, y].resource_2;
+                    sectorObject.GetComponent<starSysteminfo>().resource_3 = sectorGrid[x, y].resource_3;
+                    sectorObject.GetComponent<starSysteminfo>().res_fuel = sectorGrid[x, y].res_fuel;
+                    sectorObject.GetComponent<starSysteminfo>().civType = Random.Range(0, 3);
+                    sectorObject.GetComponent<starSysteminfo>().population = sectorObject.GetComponent<starSysteminfo>().civType * Random.Range(10, 32000);
 
-                    newStar.transform.position = new Vector3((float)x, 1f, (float)y);
-                    newStar.GetComponentInChildren<TextMesh>().text = sectorGrid[x, y].systemname;
+                    sectorObject.transform.position = new Vector3((float)x, 1f, (float)y);
+                    sectorObject.GetComponentInChildren<TextMesh>().text = sectorGrid[x, y].systemname;
 
                 } else {
-                    //Not a star system. Can contain a black hole or other object
+	                //Not a star system. Can contain a black hole or other
                     if (Random.Range(0, 50000) < 1) {
-	                    newStar = Instantiate(sectorPrefab);
-
-	                    NetworkServer.Spawn(newStar);
+	                    sectorObject = Instantiate(sectorPrefab);
+	                    NetworkServer.Spawn(sectorObject);
 	                    sectorPrefab.GetComponent<SpriteRenderer>().sprite = blackHole_sprite;
 
-                        newStar.transform.position = new Vector3((float)x, 1f, (float)y);
+                        sectorObject.transform.position = new Vector3((float)x, 1f, (float)y);
                         blackholecount++;
-                    } else //empty space
-                    {
-                        //newStar = Instantiate(emptySpacePrefab);
-                        //NetworkServer.Spawn(newStar);
+                    } else{
+	                    sectorGrid[x, y].star = 0; //Random.Range(1,3); //yellow,blue,red
+	                    sectorGrid[x, y].npcStarport = 0; //no starport by default
+	                    //how many planets are there
+	                    sectorGrid[x, y].numPlanets = 0;
+
+                    	//this is empty space, no sprite
+	                    
                     }
                 }
-                //end creating current sector coords
+	            //end creating current sector coords
+	            allStarSystems.Add(sectorGrid[x, y]);
+	            
             }
         }
-	    CreateRandomLines(0);
-
-        print(systemCount + " Star Systems | " + allStarSystems.Count + " Planets | " + starportcount + " StarPorts |" + blackholecount + " Black Holes\n");
+	    //Test fuction
+	    //CreateRandomLines(0);
+	    Debug.Log("Total Sectors: "+allStarSystems.Count +"\n");
+	    Debug.Log("Star Systems: "+systemCount +" Planets: "+planetCount+" StarPorts: "+starportcount+" Black Holes: "+blackholecount+"\n");
         //Galaxy has been created.
         //We have a prefab in each sector that represents the star system and its potential starbase
     }
-    
-	
 			
 	
 

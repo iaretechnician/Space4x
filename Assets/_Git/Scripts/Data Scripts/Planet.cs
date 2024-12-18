@@ -13,6 +13,8 @@ public class Planet : MonoBehaviour
 	public int amount_resource_2;
 	public int amount_resource_1;
 	public int amount_fuel;
+	public int population;
+	public int civ_type;
     // Start is called before the first frame update
     void Start()
 	{
