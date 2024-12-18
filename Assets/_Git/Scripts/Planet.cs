@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Planet : MonoBehaviour
+public class Planet
 {
 	//This is attached to each planet that exists.  It holds the amount of commodities
 	//that are available on this planet.  If there is a starport, then it is transferred 

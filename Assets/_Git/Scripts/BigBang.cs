@@ -35,7 +35,7 @@ public class BigBang : NetworkBehaviour {
         public int star; //does it have a star
         public int numPlanets; //how many planets
         public int npcStarport; //0 is no, keep array of prices
-        public int playerStarbase;
+	    public int playerStarbase;
         public int resource_1;
         public int resource_2;
         public int resource_3;
@@ -43,13 +43,16 @@ public class BigBang : NetworkBehaviour {
         public int civType; //affects how much tax and resources(like food lol) we can get from them
         public int population;
     }
-
+	
     
 	//This contains all the data for every sector in the game so the server can cycle through the list
-    public structStarSystem[,] sectorGrid;
+	public structStarSystem[,] sectorGrid;
+    
    
-    void Start() {
-        //sort out StarSystemNames on client and server so we can use an index
+	void Start() {
+
+
+		//sort out StarSystemNames on client and server so we can use an index
         StarSystemNames = fileStarSystemNames.text.Split("\n"[0]);
 
         //only create galaxy on the server and only run ONCE (server object is being created twice in error)
@@ -130,7 +133,8 @@ public class BigBang : NetworkBehaviour {
 	                planetCount += sectorGrid[x, y].numPlanets;
                     /* ---------------------
                     * resources are in random ranges from 0 to 100 in kilotons. 
-                    * ---------------------*/
+	                * ---------------------*/
+	                
                     sectorGrid[x, y].res_fuel = (Random.Range(0, 100) * sectorGrid[x, y].numPlanets);
                     sectorGrid[x, y].resource_3 = (Random.Range(0, 100) * sectorGrid[x, y].numPlanets);
                     sectorGrid[x, y].resource_2 = (Random.Range(0, 100) * sectorGrid[x, y].numPlanets);
@@ -161,7 +165,7 @@ public class BigBang : NetworkBehaviour {
                     sectorObject.GetComponent<starSysteminfo>().x_coord = x;
                     sectorObject.GetComponent<starSysteminfo>().y_coord = y;
                     sectorObject.GetComponent<starSysteminfo>().name = sectorGrid[x, y].systemname;
-                    sectorObject.GetComponent<starSysteminfo>().planetcount = sectorGrid[x, y].numPlanets;
+	                sectorObject.GetComponent<starSysteminfo>().planetcount = sectorGrid[x, y].numPlanets;
                     sectorObject.GetComponent<starSysteminfo>().resource_1 = sectorGrid[x, y].resource_1;
                     sectorObject.GetComponent<starSysteminfo>().resource_2 = sectorGrid[x, y].resource_2;
                     sectorObject.GetComponent<starSysteminfo>().resource_3 = sectorGrid[x, y].resource_3;
@@ -211,7 +215,11 @@ public class BigBang : NetworkBehaviour {
 	        
 	        VectorLine.SetLine3D (Color.green, start.position, end.position);
         }
-    }
-
+        
+	   }
+	   
+	
+    
+	
    
 }
