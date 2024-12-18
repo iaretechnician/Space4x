@@ -25,15 +25,10 @@ public class starSysteminfo : NetworkBehaviour
 	[SyncVar]
 	public bool hasStarport;
 	public StarPort starPort;
-	public List<int> planets = new List<int>();
 	public int playerStarbase;//0 is no, > than zero is the index in starbasearray
-	
-	[SerializeField]
-	public List<StarSystemResources> resourceList = new List<StarSystemResources>();
-	public int resource_3;
-	public int resource_2;
-	public int resource_1;
-	public int res_fuel;
+	public string[] resourceNames;
+	public int[] resourceAmounts;
+	public int[] resourcePrices;
 	public int civType;//affects how much tax and resources we can get from them
 	public int population;
 

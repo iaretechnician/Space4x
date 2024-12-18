@@ -44,7 +44,8 @@ public class BigBang : NetworkBehaviour {
         public int population;
     }
 	
-    
+	StarSystemResources resourceListTemp = new StarSystemResources();
+
 	//This contains all the data for every sector in the game so the server can cycle through the list
 	public structStarSystem[,] sectorGrid;
     
@@ -158,6 +159,7 @@ public class BigBang : NetworkBehaviour {
 	                    NetworkServer.Spawn(sectorObject);
 	                    sectorPrefab.GetComponent<SpriteRenderer>().sprite = yellowStar_sprite;
                     }
+	                
 
                     //all done!
 	                //set the info on the scene gameobject
@@ -166,11 +168,10 @@ public class BigBang : NetworkBehaviour {
                     sectorObject.GetComponent<starSysteminfo>().y_coord = y;
                     sectorObject.GetComponent<starSysteminfo>().name = sectorGrid[x, y].systemname;
 	                sectorObject.GetComponent<starSysteminfo>().planetcount = sectorGrid[x, y].numPlanets;
-                    sectorObject.GetComponent<starSysteminfo>().resource_1 = sectorGrid[x, y].resource_1;
-                    sectorObject.GetComponent<starSysteminfo>().resource_2 = sectorGrid[x, y].resource_2;
-                    sectorObject.GetComponent<starSysteminfo>().resource_3 = sectorGrid[x, y].resource_3;
-                    sectorObject.GetComponent<starSysteminfo>().res_fuel = sectorGrid[x, y].res_fuel;
-                    sectorObject.GetComponent<starSysteminfo>().civType = Random.Range(0, 3);
+	                sectorObject.GetComponent<starSysteminfo>().resourceNames = new string[]{"Fuel","Minerals","Food"};
+	                sectorObject.GetComponent<starSysteminfo>().resourceAmounts = new int[]{Random.Range(0,1000),Random.Range(0,1000),Random.Range(0,1000)};
+	                sectorObject.GetComponent<starSysteminfo>().resourcePrices= new int[]{Random.Range(0,20),Random.Range(0,100),Random.Range(0,100)};
+					sectorObject.GetComponent<starSysteminfo>().civType = Random.Range(0, 3);
                     sectorObject.GetComponent<starSysteminfo>().population = sectorObject.GetComponent<starSysteminfo>().civType * Random.Range(10, 32000);
 
                     sectorObject.transform.position = new Vector3((float)x, 1f, (float)y);
@@ -217,6 +218,15 @@ public class BigBang : NetworkBehaviour {
         }
         
 	   }
+	   
+	public void CreateDefaultResources(string _name,int _amount, int _price)
+	{
+		
+		resourceListTemp.resourceName = _name;
+		resourceListTemp.resourceAmount = _amount;
+		resourceListTemp.resourcePrice = _price;
+		
+	}
 	   
 	
     

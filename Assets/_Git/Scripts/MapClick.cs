@@ -96,10 +96,7 @@ public class MapClick : MonoBehaviour
 					//save the current system to the player
 					playerManager.instance.currentlySelectedSystem = hit.collider.gameObject;
 					systemName.text = hit.collider.gameObject.name;
-					resources.text = info.resource_2.ToString();
-					population.text	= info.population.ToString();
-					fuel.text = info.res_fuel.ToString();
-				
+					
 					Debug.Log("SELECTED " +hit.collider.gameObject.name+ " AT "+hit.collider.gameObject.transform.position.x +"-"+hit.collider.gameObject.transform.position.z);
 			
 				}
