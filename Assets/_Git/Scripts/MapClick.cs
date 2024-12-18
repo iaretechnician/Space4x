@@ -5,8 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 using Vectrosity;
+using Mirror;
 
-public class MapClick : MonoBehaviour
+public class MapClick : NetworkBehaviour
 {
 	/*
 	Attached to the Chart on player prefab. Handles clicking on the map and showing the current star system
@@ -19,17 +20,19 @@ public class MapClick : MonoBehaviour
 	starSysteminfo info;
 	public TMP_Text systemName,systemcoords,resources,civtype,population,fuel;
 	Vector3 spacePos;
-	public GameObject ship;
+	public GameObject shipPrefab;
+	public GameObject shipObject;
+		
 	Vector3 startMeasure= new Vector3(0f,1f,0f);
 	Vector3 endMeasure = new Vector3(0f,1f,0f);
 	Vector3 currentVector3 = new Vector3(0f, 1f, 0f);
 	Vector3 mouseVector3 = new Vector3(0f, 1f, 0f);
-	Vector3 v3;
+	Vector3 v3,selectedVector3;
 	public enum measure_enum{measuring,started,completed};
 	public measure_enum _measuring;
 	private bool _startMeasuring = false;
 	private bool _endMeasuring = false;
-	private VectorLine lastLine;
+	private VectorLine lastLine,shipDot;
 
 	public TMP_Text distanceText;
 	public TMP_Text displayCoords;
@@ -66,6 +69,13 @@ public class MapClick : MonoBehaviour
     	
 		if (Input. GetMouseButtonDown(0))
 		{
+
+			selectedVector3 = Input.mousePosition;
+			selectedVector3 = Camera.main.ScreenToWorldPoint(v3);
+			selectedVector3.y = 1f;
+			selectedVector3.x=Mathf.Floor(v3.x*10)/10;
+			selectedVector3.z=Mathf.Floor(v3.z*10)/10;
+			Debug.Log("Selected Vector "+selectedVector3);
 			
 			if(EventSystem.current.IsPointerOverGameObject()) return;
 			
@@ -108,10 +118,8 @@ public class MapClick : MonoBehaviour
 					{
 						Debug.Log(hit_mouseclick.collider.gameObject.name + " ");
 					}
-					GameObject _ship = Instantiate(ship);
-					//_ship.transform.position = new Vector3(hit.point.x,1f,hit.point.z);
-					//print("ship created");
-					//return;
+					spawnShip();
+					
 					planetName.text = "Empty Space";
 					coords.text = Mathf.Round(hit.point.x).ToString() +":"+Mathf.Round(hit.point.z).ToString();
 					spacePos.Set(hit.point.x,0f,hit.point.z);
@@ -189,6 +197,21 @@ public class MapClick : MonoBehaviour
 	}
 	
 	}//update
+	
+	public void spawnShip()
+	{
+		//List<Vector3> pointLoc = new List<Vector3>();
+		//pointLoc.Add(selectedVector3);
+		//shipDot = new VectorLine("Points", pointLoc, 100f, LineType.Points);
+		//shipDot.Draw();
+		
+		shipObject = Instantiate(shipPrefab);
+		NetworkServer.Spawn(shipObject);
+		shipObject.transform.position = selectedVector3;
+		
+		print("ship created");
+		//return;
+	}
 
 		
 }

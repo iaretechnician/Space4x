@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vectrosity;
 
 public class Ship : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class Ship : MonoBehaviour
 	public Vector3 currentLocation;
 	public List<Vector3> locationHistory = new List<Vector3>();
 	public List<Vector3> waypoints = new List<Vector3>();
+	public VectorLine shipTrace;
 	
 	//cargo
 	
@@ -27,13 +29,17 @@ public class Ship : MonoBehaviour
     // Start is called before the first frame update
     void Start()
 	{
+		locationHistory.Add(gameObject.transform.position);
 		
     }
 
     // Update is called once per frame
     void Update()
-    {
-        
+	{
+		if(shipTrace != null) VectorLine.Destroy (ref shipTrace	);
+		shipTrace = VectorLine.SetLine3D (Color.green, locationHistory[0],gameObject.transform.position);
+		gameObject.transform.Translate(.01f,0F,0F);
+		print("UPDATE ON SHIP");
     }
     
 	public void ShowPath()
