@@ -8,8 +8,10 @@ using Vectrosity;
 
 public class BigBang : NetworkBehaviour {
 
-    public static BigBang instance;
-    public int chance = 100;
+	public static BigBang instance;
+	public int mapSizeX = 1000;
+	public int mapSizeY = 1000;
+    public int starSystemChance = 100;
 	private static bool BIGBANG = false;
 	//Gameobject in the scene that we parent all the sector objects to
     public GameObject starmap;
@@ -45,10 +47,7 @@ public class BigBang : NetworkBehaviour {
     
 	//This contains all the data for every sector in the game so the server can cycle through the list
     public structStarSystem[,] sectorGrid;
-    //public structStarSystem _currentsector;
-    public List<structStarSystem> allStarSystems;
-    //public structStarSystem temp_StarSystem;//we only need this to copy the current settings into the allStarSystems[
-
+   
     void Start() {
         //sort out StarSystemNames on client and server so we can use an index
         StarSystemNames = fileStarSystemNames.text.Split("\n"[0]);
@@ -62,10 +61,9 @@ public class BigBang : NetworkBehaviour {
             }
             StarSystemNames = _tempStarSystemNames.ToArray();
             print(StarSystemNames.Length + " unique StarSystemNames available");
-            //------------------------------------------
-
-            allStarSystems = new List<structStarSystem>();
-            sectorGrid = new structStarSystem[1000, 1000];
+	        //------------------------------------------
+	        //This is a list of ALL the sectors in the universe
+	        sectorGrid = new structStarSystem[mapSizeX, mapSizeY];
             bigBang();
         }
     }
@@ -77,7 +75,8 @@ public class BigBang : NetworkBehaviour {
         
 	    int starnameIndex = 0; //used for which name is selected from list
 	    
-	    //internel counters of objects created just for the log outpu
+	    //internel counters of objects created just for the log output
+	    int sectorID =0;
 	    int systemCount = 0; //how many systems are created
 	    int planetCount = 0; //total number of planets
         int starportcount = 0; //how many starports total
@@ -95,7 +94,13 @@ public class BigBang : NetworkBehaviour {
         for (int x = 0; x < 1000; x++) {
             _xcoord = ((x * 16) - 5000);
             for (int y = 0; y < 1000; y++) {
-                _ycoord = ((y * 16) - 5000);
+	            _ycoord = ((y * 16) - 5000);
+	            
+	            //assign to each sector coords for reference, 
+	            sectorGrid[x, y].x = x;
+	            sectorGrid[x, y].y = y;
+	            sectorGrid[x, y].ID = sectorID;
+	            sectorID++;
 
                 //rndMax is a number that is going to be HIGHER as the coords get farther from map center (0,0)
                 //it also adjusts GREATER as we get farther in Y top/bottom direction
@@ -104,13 +109,13 @@ public class BigBang : NetworkBehaviour {
                 /************************
                 Every sector contains something, either empty space prefab which can contain an outpost or ship
                 or it has a star system. we create one prefab or the other.
-                if its LESS than the chance (high .. 70-90) of a empty space, then it has nothing, 
+                if its LESS than the starSystemChance (high .. 70-90) of a empty space, then it has nothing, 
                 */
 
-                if (Random.Range(0, rndMax + 1000) < chance) {
+                if (Random.Range(0, rndMax + 1000) < starSystemChance) {
                     //Create the star system
-                    systemCount++;
-
+	                systemCount++;
+                    
                     sectorGrid[x, y].star = 1; //Random.Range(1,3); //yellow,blue,red
                     //if we run out of unique names, get and reuse some random ones from the list
                     if (systemCount >= StarSystemNames.Length) {
@@ -123,7 +128,6 @@ public class BigBang : NetworkBehaviour {
                     //how many planets are there
 	                sectorGrid[x, y].numPlanets = Random.Range(1, 8);
 	                planetCount += sectorGrid[x, y].numPlanets;
-                    sectorGrid[x, y].ID = systemCount; //array index this planet is in the allStarSystems arry
                     /* ---------------------
                     * resources are in random ranges from 0 to 100 in kilotons. 
                     * ---------------------*/
@@ -135,9 +139,8 @@ public class BigBang : NetworkBehaviour {
                     sectorGrid[x, y].population = sectorGrid[x, y].civType * (Random.Range(0, 32000) * sectorGrid[x, y].numPlanets); //random population, adjust later                        
 
                     //is there an NPC starport? rnd -50 to 0, clamps to -1(none),0(Fed starport)
-                    if ((Random.Range(0, 10)) < 1) {
-                       
-
+	                if ((Random.Range(0, 10)) < 1) 
+	                {
                         sectorGrid[x, y].npcStarport = 1; //index of this starbase in the List, 
                         sectorGrid[x, y].playerStarbase = 0;
                         //count the Federation Starports for Log
@@ -150,12 +153,11 @@ public class BigBang : NetworkBehaviour {
 	                    sectorObject = Instantiate(sectorPrefab);
 	                    NetworkServer.Spawn(sectorObject);
 	                    sectorPrefab.GetComponent<SpriteRenderer>().sprite = yellowStar_sprite;
-
                     }
 
                     //all done!
-                    //set the info
-                    sectorObject.GetComponent<starSysteminfo>().ID = systemCount;
+	                //set the info on the scene gameobject
+	                sectorObject.GetComponent<starSysteminfo>().ID = sectorGrid[x, y].ID;
                     sectorObject.GetComponent<starSysteminfo>().x_coord = x;
                     sectorObject.GetComponent<starSysteminfo>().y_coord = y;
                     sectorObject.GetComponent<starSysteminfo>().name = sectorGrid[x, y].systemname;
@@ -176,7 +178,6 @@ public class BigBang : NetworkBehaviour {
 	                    sectorObject = Instantiate(sectorPrefab);
 	                    NetworkServer.Spawn(sectorObject);
 	                    sectorPrefab.GetComponent<SpriteRenderer>().sprite = blackHole_sprite;
-
                         sectorObject.transform.position = new Vector3((float)x, 1f, (float)y);
                         blackholecount++;
                     } else{
@@ -184,20 +185,15 @@ public class BigBang : NetworkBehaviour {
 	                    sectorGrid[x, y].npcStarport = 0; //no starport by default
 	                    //how many planets are there
 	                    sectorGrid[x, y].numPlanets = 0;
-
                     	//this is empty space, no sprite
-	                    
                     }
                 }
 	            //end creating current sector coords
-	            allStarSystems.Add(sectorGrid[x, y]);
-	            
             }
         }
 	    //Test fuction
 	    //CreateRandomLines(0);
-	    Debug.Log("Total Sectors: "+allStarSystems.Count +"\n");
-	    Debug.Log("Star Systems: "+systemCount +" Planets: "+planetCount+" StarPorts: "+starportcount+" Black Holes: "+blackholecount+"\n");
+	    Debug.Log("BIGBANG OUTPUT: \nTotal Sectors: "+sectorGrid.Length +"\nStar Systems: "+systemCount +"\nPlanets: "+planetCount+"\nStarPorts: "+starportcount+"\nBlack Holes: "+blackholecount+"\n");
         //Galaxy has been created.
         //We have a prefab in each sector that represents the star system and its potential starbase
     }
