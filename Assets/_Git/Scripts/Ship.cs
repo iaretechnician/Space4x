@@ -20,6 +20,8 @@ public class Ship : MonoBehaviour
 	public Vector3 currentLocation;
 	public List<Vector3> locationHistory = new List<Vector3>();
 	public List<Vector3> waypoints = new List<Vector3>();
+	public bool displayWaypoints;
+	public bool displayTrack = true;
 	public VectorLine shipTrace;
 	
 	//cargo
