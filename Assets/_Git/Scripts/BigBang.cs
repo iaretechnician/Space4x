@@ -19,7 +19,7 @@ public class BigBang : NetworkBehaviour {
 	//We can change the sprite to show on the map what is in this sector
 	public GameObject sectorPrefab;
 	//Images we put onto the sectorPrefab to visually show what is in the sector
-	public Sprite yellowStar_sprite,starPort_sprite,blackHole_sprite;
+	public Sprite yellowStar_sprite,starPort_sprite,blackHole_sprite,starBase_sprite;
 	//This is the actual object in the scene that contains all the visual and data info
 	GameObject sectorObject;
     
