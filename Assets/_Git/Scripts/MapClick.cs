@@ -27,7 +27,8 @@ public class MapClick : NetworkBehaviour
 	Vector3 endMeasure = new Vector3(0f,1f,0f);
 	Vector3 currentVector3 = new Vector3(0f, 1f, 0f);
 	Vector3 mouseVector3 = new Vector3(0f, 1f, 0f);
-	Vector3 v3,selectedVector3;
+	Vector3 v3;
+	public Vector3 selectedVector3;
 	public enum measure_enum{measuring,started,completed};
 	public measure_enum _measuring;
 	private bool _startMeasuring = false;
@@ -118,7 +119,6 @@ public class MapClick : NetworkBehaviour
 					{
 						Debug.Log(hit_mouseclick.collider.gameObject.name + " ");
 					}
-					spawnShip();
 					
 					planetName.text = "Empty Space";
 					coords.text = Mathf.Round(hit.point.x).ToString() +":"+Mathf.Round(hit.point.z).ToString();
@@ -198,20 +198,6 @@ public class MapClick : NetworkBehaviour
 	
 	}//update
 	
-	public void spawnShip()
-	{
-		//List<Vector3> pointLoc = new List<Vector3>();
-		//pointLoc.Add(selectedVector3);
-		//shipDot = new VectorLine("Points", pointLoc, 100f, LineType.Points);
-		//shipDot.Draw();
-		
-		shipObject = Instantiate(shipPrefab);
-		NetworkServer.Spawn(shipObject);
-		shipObject.transform.position = selectedVector3;
-		
-		print("ship created");
-		//return;
-	}
-
+	
 		
 }
