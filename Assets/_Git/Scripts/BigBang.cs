@@ -44,7 +44,6 @@ public class BigBang : NetworkBehaviour {
         public int population;
     }
 	
-	StarSystemResources resourceListTemp = new StarSystemResources();
 
 	//This contains all the data for every sector in the game so the server can cycle through the list
 	public structStarSystem[,] sectorGrid;
@@ -218,15 +217,6 @@ public class BigBang : NetworkBehaviour {
         }
         
 	   }
-	   
-	public void CreateDefaultResources(string _name,int _amount, int _price)
-	{
-		
-		resourceListTemp.resourceName = _name;
-		resourceListTemp.resourceAmount = _amount;
-		resourceListTemp.resourcePrice = _price;
-		
-	}
 	   
 	
     
