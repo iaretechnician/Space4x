@@ -9,6 +9,10 @@ public class ServerSidePlayerController :  NetworkBehaviour{
 	public string playerName,playerPassword;
 	public Sprite starBaseImg;
 	public string homeWorld;
+	
+	public GameObject shipPrefab;
+	private GameObject localShipObject;
+	public Vector3 currentVector;
 
 	public List<GameObject> myShips = new List<GameObject>();
 	public List<GameObject> myBases = new List<GameObject>();
@@ -29,6 +33,18 @@ public class ServerSidePlayerController :  NetworkBehaviour{
 		//this needs to differentiate between players starports
 		//then we add it to our player known objects.
 		system.GetComponent<starSysteminfo>().playerStarbase = 1;
+		
+	}
+	
+	public void SpawnShip(Vector3 _spawnVector)
+	{
+		
+		localShipObject = Instantiate(shipPrefab);
+		NetworkServer.Spawn(localShipObject);
+		localShipObject.transform.position = _spawnVector;
+		
+		Debug.Log("---- Ship created at "+_spawnVector);
+		myShips.Add(localShipObject);
 		
 	}
 	
