@@ -1074,6 +1074,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1231839034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1231839036}
+  - component: {fileID: 1231839035}
+  m_Layer: 0
+  m_Name: StarPortController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1231839035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231839034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7436489703bfffb45a8a4c6effa712f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  starPorts: []
+--- !u!4 &1231839036
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231839034}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 328.03323, y: 374.40085, z: -0.027642246}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1254035193
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1156,6 +1201,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4476378826210018, guid: 05d4172a9bd532e4697154bd65c4d9ac, type: 3}
   m_PrefabInstance: {fileID: 1254035193}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1335198399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1335198400}
+  m_Layer: 0
+  m_Name: StarBaseController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1335198400
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335198399}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 328.03323, y: 374.40085, z: -0.027642246}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1654334027
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,6 +1274,10 @@ MonoBehaviour:
   starPort_sprite: {fileID: 21300000, guid: f4a5c51897f64024fa79b885f7a38367, type: 3}
   blackHole_sprite: {fileID: 21300000, guid: c6b4dfc6357f099439582f3a1946e3c0, type: 3}
   starBase_sprite: {fileID: 0}
+  resource1DefaultPrice: 0
+  resource2DefaultPrice: 0
+  resource3DefaultPrice: 0
+  fuelDefaultPrice: 0
   fileStarSystemNames: {fileID: 4900000, guid: 27bb85ee7ee9be94c8bbb920b1db79b6, type: 3}
 --- !u!114 &1654334029
 MonoBehaviour:
@@ -26117,3 +26197,5 @@ SceneRoots:
   - {fileID: 5779194681501903835}
   - {fileID: 1762041338}
   - {fileID: 4791167527513181810}
+  - {fileID: 1335198400}
+  - {fileID: 1231839036}

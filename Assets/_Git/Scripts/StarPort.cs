@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class StarPort : MonoBehaviour
+public class StarPort: NetworkBehaviour
 {
 	/*A starport is a non-player owned trading center.  It collects the resources from
 	all the planets in its sector for players to buy and sell.  The price is unique and changes.
