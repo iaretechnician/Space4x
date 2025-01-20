@@ -22,6 +22,12 @@ public class BigBang : NetworkBehaviour {
 	public Sprite yellowStar_sprite,starPort_sprite,blackHole_sprite,starBase_sprite;
 	//This is the actual object in the scene that contains all the visual and data info
 	GameObject sectorObject;
+	
+	public int resource1DefaultPrice;
+	public int resource2DefaultPrice;
+	public int resource3DefaultPrice;
+	public int fuelDefaultPrice;
+
     
     public TextAsset fileStarSystemNames;
     private string[] StarSystemNames; //array of all StarSystemNames sorted from TextAsset file
@@ -67,6 +73,11 @@ public class BigBang : NetworkBehaviour {
 	        //------------------------------------------
 	        //This is a list of ALL the sectors in the universe
 	        sectorGrid = new structStarSystem[mapSizeX, mapSizeY];
+	        
+	        resource1DefaultPrice = Random.Range(100,1000);
+	        resource2DefaultPrice = Random.Range(100,3000);
+	        resource3DefaultPrice = Random.Range(100,5000);
+	        fuelDefaultPrice = Random.Range(1,100);
             bigBang();
         }
     }
@@ -145,9 +156,20 @@ public class BigBang : NetworkBehaviour {
                     //is there an NPC starport? rnd -50 to 0, clamps to -1(none),0(Fed starport)
 	                if ((Random.Range(0, 10)) < 1) 
 	                {
-                        sectorGrid[x, y].npcStarport = 1; //index of this starbase in the List, 
-                        sectorGrid[x, y].playerStarbase = 0;
-                        //count the Federation Starports for Log
+		                sectorGrid[x, y].npcStarport = 1; //index of this starbase in the List, 
+		                sectorGrid[x, y].playerStarbase = 0;
+		                StarPort newStarPort = new StarPort();
+		                
+		                //DEBUG ADD STARPORT HERE
+		                
+		                newStarPort.resource1Price = (int)(resource1DefaultPrice * Random.Range(-.5f,2f));
+		                newStarPort.resource1Price = (int)(resource2DefaultPrice * Random.Range(-.5f,2f));
+		                newStarPort.resource1Price = (int)(resource3DefaultPrice * Random.Range(-.5f,2f));
+		                newStarPort.resource1Price = (int)(fuelDefaultPrice * Random.Range(-.5f,2f));
+		                
+		                StarPortController.instance.starPorts.Add(newStarPort);
+		                //StarPortController.instance.
+		                //count the Federation Starports for Log
                         starportcount++;
 	                    sectorObject = Instantiate(sectorPrefab);
 						NetworkServer.Spawn(sectorObject);
